@@ -1,0 +1,258 @@
+.mypage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mypage-container {
+  width: 392px;
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mypage-container h2 {
+  margin: 0 0 24px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.mypage-section-title {
+  width: 344px;
+  margin: 0 0 18px;
+  font-size: 18px;
+}
+
+.mypage-form {
+  width: 344px;
+}
+
+.mypage-profile-area {
+  margin-bottom: 24px;
+}
+
+.mypage-profile-area > label:first-child {
+  display: block;
+  margin-bottom: 16px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.mypage-profile-image-box {
+  position: relative;
+  z-index: 1;
+  width: 149px;
+  height: 149px;
+  margin: 0 auto;
+  border-radius: 50%;
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.mypage-profile-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mypage-profile-image-box::after {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  content: "";
+}
+
+.mypage-profile-image-box span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 52px;
+  height: 27px;
+  border: 1px solid #fff;
+  border-radius: 14px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transform: translate(-50%, -50%);
+}
+
+.mypage-form-box label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.mypage-email-text {
+  margin: 0 0 24px;
+  font-size: 14px;
+}
+
+.mypage-form-box input {
+  width: 100%;
+  height: 33px;
+  padding: 0 12px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  outline: none;
+  background-color: #f4f5f7;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.mypage-form-box input:focus {
+  border-color: #1e3a5f;
+  box-shadow: 0 0 0 2px rgba(30, 58, 95, 0.12);
+}
+
+.mypage-helper-text {
+  margin: 6px 0 0;
+  color: #f00;
+  font-size: 12px;
+}
+
+.mypage-helper-text.notice {
+  color: #6b7280;
+}
+
+.mypage-submit-button {
+  width: 100%;
+  height: 38px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 4px;
+  background-color: #1e3a5f;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.mypage-submit-button:disabled,
+.mypage-confirm-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.mypage-withdraw-button {
+  margin-top: 16px;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.mypage-toast {
+  width: 102px;
+  height: 46px;
+  margin-top: 48px;
+  border-radius: 23px;
+  background-color: #1e3a5f;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.mypage-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mypage-modal {
+  position: relative;
+  z-index: 10000;
+  width: 408px;
+  padding: 32px 24px 28px;
+  border-radius: 12px;
+  background: #fff;
+  text-align: center;
+}
+
+.mypage-modal h3 {
+  margin: 0 0 20px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.mypage-modal p {
+  margin: 0 0 24px;
+  font-size: 16px;
+}
+
+.mypage-withdraw-password {
+  width: 260px;
+  height: 36px;
+  margin-bottom: 12px;
+  padding: 0 12px;
+}
+
+.mypage-modal .mypage-withdraw-helper-text {
+  min-height: 20px;
+  margin: 0 0 20px;
+  color: #f00;
+  font-size: 14px;
+}
+
+.mypage-modal-button-row {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.mypage-modal-button-row button {
+  width: 120px;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mypage-cancel-button {
+  background: #242424;
+}
+
+.mypage-confirm-button {
+  background: #1e3a5f;
+}
+
+.mypage-status {
+  width: calc(100% - 32px);
+  max-width: 592px;
+  margin: 80px auto;
+  text-align: center;
+}
+
+@media (max-width: 440px) {
+  .mypage-container {
+    width: 100%;
+    margin-top: 40px;
+  }
+
+  .mypage-section-title,
+  .mypage-form {
+    width: calc(100% - 48px);
+    max-width: 344px;
+  }
+
+  .mypage-modal {
+    width: calc(100% - 32px);
+    max-width: 408px;
+  }
+}

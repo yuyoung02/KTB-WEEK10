@@ -1,0 +1,66 @@
+// 투표 모달 열기, 투표 저장과 로그인 이동 처리
+import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { submitStadiumVote } from "../../api/voteApi";
+import { getAccessToken } from "../../auth/tokenStorage";
+import { getStadiumCode } from "../../data/stadiums";
+import StadiumVoteModal from "./StadiumVoteModal";
+
+function MonthlyStadiumVote({ onVoteSuccess }) {
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+  const submitVote = async (stadiumId) => {
+    if (!getAccessToken()) {
+      closeModal();
+      navigate("/login", {
+        state: { from: { pathname: "/", hash: "#monthly-vote" } },
+      });
+      return false;
+    }
+
+    await submitStadiumVote(
+      getStadiumCode(stadiumId),
+    );
+    await onVoteSuccess?.();
+    return true;
+  };
+
+  return (
+    <section className="section-block" id="monthly-vote">
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">JULY VOTE</p>
+          <h3>7월의 구장 투표</h3>
+        </div>
+        <span className="period">7.1 — 7.31</span>
+      </div>
+
+      <article className="vote-card">
+        <div className="vote-intro">
+          <span className="vote-chip">이번 달 질문</span>
+          <h4>응원 분위기가 가장 좋은 야구장은?</h4>
+          <p>직접 경험한 구장 중 한 곳을 골라주세요.</p>
+          <button
+            type="button"
+            className="open-vote-button"
+            onClick={() => setIsModalOpen(true)}
+          >
+            투표하러 가기 →
+          </button>
+        </div>
+      </article>
+
+      {isModalOpen && (
+        <StadiumVoteModal
+          onClose={closeModal}
+          onSubmit={submitVote}
+        />
+      )}
+    </section>
+  );
+}
+
+export default MonthlyStadiumVote;
