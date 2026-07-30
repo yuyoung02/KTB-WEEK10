@@ -43,7 +43,7 @@ function LoginPage() {
     <>
       <header className="login-header">
         <Link to="/" className="login-logo">
-          <h1>⚾️ 야구 = 질병 ⚾️</h1>
+          <h1>구장 이야기 ⚾️</h1>
         </Link>
       </header>
 
