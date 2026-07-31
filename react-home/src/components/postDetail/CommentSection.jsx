@@ -97,7 +97,23 @@ function CommentSection({ postId, comments, currentUser, onCommentsChange }) {
         <div className="comment-list" aria-label="댓글 목록">
           {comments.length === 0 ? (
             <div className="empty-comments">
-              <span aria-hidden="true">💬</span>
+              <span className="empty-comments-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M20 11.5a7.5 7.5 0 0 1-8 7.5 9.3 9.3 0 0 1-3.4-.64L4 20l1.42-3.79A7.1 7.1 0 0 1 4 12c0-4.14 3.58-7.5 8-7.5s8 2.86 8 7Z"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M8.5 11.75h.01M12 11.75h.01M15.5 11.75h.01"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
               <strong>아직 댓글이 없어요</strong>
               <p>첫 번째 댓글로 이야기를 시작해보세요.</p>
             </div>
