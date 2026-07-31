@@ -9,9 +9,13 @@ function CommentForm({
 }) {
   return (
     <form className="comment-write-box" onSubmit={onSubmit}>
+      <div className="comment-form-heading">
+        <strong>{isEditing ? "댓글 수정 중" : "댓글 작성"}</strong>
+        <span>{isEditing ? "내용을 다듬고 저장해주세요." : "서로를 배려하는 댓글을 남겨주세요."}</span>
+      </div>
       <textarea
         value={value}
-        placeholder="댓글을 남겨주세요!"
+        placeholder="이 게시글에 대한 생각을 남겨주세요."
         aria-label="댓글 내용"
         onChange={(event) => onChange(event.target.value)}
       />

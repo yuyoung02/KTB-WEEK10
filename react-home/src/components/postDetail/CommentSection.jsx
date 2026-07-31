@@ -72,35 +72,52 @@ function CommentSection({ postId, comments, currentUser, onCommentsChange }) {
 
   return (
     <>
-      <CommentForm
-        value={commentText}
-        isEditing={Boolean(editingCommentId)}
-        isProcessing={isProcessing}
-        onChange={setCommentText}
-        onCancelEdit={resetForm}
-        onSubmit={handleSubmit}
-      />
+      <section className="comment-section" aria-labelledby="comment-section-title">
+        <div className="comment-section-heading">
+          <div>
+            <span className="comment-section-label">COMMUNITY</span>
+            <h3 id="comment-section-title">댓글</h3>
+          </div>
+          <span className="comment-count-badge" aria-label={`댓글 ${comments.length}개`}>
+            {comments.length}
+          </span>
+        </div>
 
-      {error && <p className="detail-error" role="alert">{error}</p>}
+        <CommentForm
+          value={commentText}
+          isEditing={Boolean(editingCommentId)}
+          isProcessing={isProcessing}
+          onChange={setCommentText}
+          onCancelEdit={resetForm}
+          onSubmit={handleSubmit}
+        />
 
-      <section className="comment-list" aria-label="댓글 목록">
-        {comments.length === 0 ? (
-          <p className="empty-comments">첫 번째 댓글을 남겨보세요.</p>
-        ) : (
-          comments.map((comment) => (
-            <CommentItem
-              key={comment.commentId}
-              comment={comment}
-              isOwner={currentUser?.userId === comment.userId}
-              onEdit={(selectedComment) => {
-                setEditingCommentId(selectedComment.commentId);
-                setCommentText(selectedComment.commentText);
-                setError("");
-              }}
-              onDelete={setDeleteTarget}
-            />
-          ))
-        )}
+        {error && <p className="detail-error" role="alert">{error}</p>}
+
+        <div className="comment-list" aria-label="댓글 목록">
+          {comments.length === 0 ? (
+            <div className="empty-comments">
+              <span aria-hidden="true">💬</span>
+              <strong>아직 댓글이 없어요</strong>
+              <p>첫 번째 댓글로 이야기를 시작해보세요.</p>
+            </div>
+          ) : (
+            comments.map((comment, index) => (
+              <CommentItem
+                key={comment.commentId}
+                comment={comment}
+                order={index + 1}
+                isOwner={currentUser?.userId === comment.userId}
+                onEdit={(selectedComment) => {
+                  setEditingCommentId(selectedComment.commentId);
+                  setCommentText(selectedComment.commentText);
+                  setError("");
+                }}
+                onDelete={setDeleteTarget}
+              />
+            ))
+          )}
+        </div>
       </section>
 
       {deleteTarget && (
