@@ -36,12 +36,23 @@ body { margin:0; padding-bottom:72px; background:var(--cream); color:#15202b; fo
 .section-heading { margin-bottom:18px; display:flex; justify-content:space-between; align-items:flex-end; }
 .section-heading h3 { margin:0; font-size:26px; letter-spacing:-.03em; }
 .period { color:var(--muted); font-size:12px; }
-.vote-card { border-radius:24px; background:#fff; overflow:hidden; box-shadow:0 14px 45px rgba(22,52,82,.07); }
-.vote-intro { padding:40px 42px; color:#fff; background:var(--navy-dark); }
+.vote-card { border-radius:28px; background:var(--navy); overflow:hidden; box-shadow:0 16px 45px rgba(22,52,82,.12); }
+.vote-intro { position:relative; min-height:285px; padding:44px 46px; color:#fff; background:var(--navy); display:flex; align-items:center; overflow:hidden; }
+.vote-copy { position:relative; z-index:2; max-width:410px; }
 .vote-chip { display:inline-block; margin-bottom:13px; padding:6px 10px; border-radius:99px; background:var(--lime); color:var(--navy-dark); font-size:11px; font-weight:900; }
 .vote-intro h4 { margin:0; font-size:25px; letter-spacing:-.035em; }
-.vote-intro p { margin:12px 0 0; color:#b9c6d1; font-size:13px; line-height:1.65; }
-.open-vote-button { height:46px; margin-top:26px; padding:0 20px; border:0; border-radius:11px; background:var(--lime); color:var(--navy-dark); font-family:inherit; font-size:13px; font-weight:900; cursor:pointer; }
+.vote-intro p { margin:12px 0 0; color:#cfdae3; font-size:13px; line-height:1.65; }
+.open-vote-button { height:46px; margin-top:26px; padding:0 20px; border:0; border-radius:11px; background:var(--lime); color:var(--navy-dark); font-family:inherit; font-size:13px; font-weight:900; cursor:pointer; transition:transform .18s,box-shadow .18s; }
+.open-vote-button:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(8,22,35,.22); }
+.vote-visual { position:absolute; right:-12px; bottom:-25px; width:285px; height:220px; opacity:.11; transform:rotate(-3deg); pointer-events:none; }
+.vote-visual::before { content:""; position:absolute; right:12px; bottom:12px; width:260px; height:54px; border-radius:50%; background:#fff; filter:blur(18px); opacity:.38; }
+.vote-podium { position:absolute; right:20px; bottom:0; width:245px; height:200px; display:flex; align-items:flex-end; justify-content:center; gap:8px; }
+.vote-podium-step { position:relative; width:74px; border:7px solid #fff; border-bottom:0; border-radius:15px 15px 0 0; color:#fff; display:flex; justify-content:center; align-items:flex-start; }
+.vote-podium-step::before { content:""; position:absolute; top:15px; left:13px; right:13px; height:2px; border-radius:2px; background:#fff; }
+.vote-podium-step strong { margin-top:28px; font-size:48px; line-height:1; font-family:Arial,sans-serif; }
+.vote-podium-step.second { height:118px; }
+.vote-podium-step.first { height:172px; }
+.vote-podium-step.third { height:88px; }
 .vote-modal { position:fixed; inset:0; z-index:100; padding:28px 16px; background:rgba(8,22,35,.68); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(5px); }
 .vote-modal.hidden { display:none; }
 .vote-modal-panel { width:100%; max-width:650px; max-height:calc(100vh - 56px); padding:28px; border-radius:24px; background:#fff; overflow-y:auto; box-shadow:0 30px 80px rgba(0,0,0,.25); }
@@ -87,7 +98,8 @@ body { margin:0; padding-bottom:72px; background:var(--cream); color:#15202b; fo
 @media (max-width:600px) {
   .header-nav a { white-space:nowrap; } .home-container { margin-top:22px; }
   .hero { min-height:300px; padding:32px 25px; } .hero h2 { font-size:30px; }
-  .section-heading h3 { font-size:22px; } .vote-intro { padding:30px 24px; } .vote-intro h4 { font-size:21px; }
+  .section-heading h3 { font-size:22px; } .vote-intro { min-height:290px; padding:30px 24px; } .vote-intro h4 { max-width:250px; font-size:21px; }
+  .vote-copy { max-width:78%; } .vote-visual { right:-86px; bottom:-34px; width:245px; height:190px; opacity:.085; } .vote-podium { transform:scale(.82); transform-origin:right bottom; }
   .vote-modal-panel { padding:22px 16px; } .stadium-options { grid-template-columns:1fr; } .stadium-option { padding:0 12px; }
   .podium { min-height:350px; padding:22px 8px 0; gap:5px; } .podium-stadium { min-height:145px; margin:0 1px 9px; padding:14px 5px 12px; } .podium-stadium strong { font-size:10px; } .podium-step b { font-size:25px; }
 }

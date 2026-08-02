@@ -40,16 +40,26 @@ function MonthlyStadiumVote({ onVoteSuccess }) {
 
       <article className="vote-card">
         <div className="vote-intro">
-          <span className="vote-chip">이번 달 질문</span>
-          <h4>응원 분위기가 가장 좋은 야구장은?</h4>
-          <p>직접 경험한 구장 중 한 곳을 골라주세요.</p>
-          <button
-            type="button"
-            className="open-vote-button"
-            onClick={() => setIsModalOpen(true)}
-          >
-            투표하러 가기 →
-          </button>
+          <div className="vote-copy">
+            <span className="vote-chip">이번 달 질문</span>
+            <h4>응원 분위기가 가장 좋은 야구장은?</h4>
+            <p>직접 경험한 구장 중 한 곳을 골라주세요.</p>
+            <button
+              type="button"
+              className="open-vote-button"
+              onClick={() => setIsModalOpen(true)}
+            >
+              투표하러 가기 →
+            </button>
+          </div>
+
+          <div className="vote-visual" aria-hidden="true">
+            <div className="vote-podium">
+              <div className="vote-podium-step second"><strong>2</strong></div>
+              <div className="vote-podium-step first"><strong>1</strong></div>
+              <div className="vote-podium-step third"><strong>3</strong></div>
+            </div>
+          </div>
         </div>
       </article>
 
