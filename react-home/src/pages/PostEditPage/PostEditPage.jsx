@@ -101,7 +101,11 @@ function PostEditPage() {
   return (
     <main className="edit-page">
       <section className="edit-container">
-        <h2>게시글 수정</h2>
+        <div className="edit-heading">
+          <p className="eyebrow">EDIT YOUR STORY</p>
+          <h2>게시글 수정</h2>
+          <p>작성한 구장 이야기를 수정할 수 있어요.</p>
+        </div>
         <PostEditForm
           post={post}
           isSubmitting={isSubmitting}

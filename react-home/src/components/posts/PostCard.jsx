@@ -22,19 +22,32 @@ function PostCard({ post }) {
               <StadiumBadge stadiumCode={post.stadiumId ?? post.stadiumCode} />
               <h2>{title}</h2>
             </div>
-            <span className="post-date">{formatDate(post.date ?? post.createdAt)}</span>
+            <span className="post-arrow" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none">
+                <path
+                  d="m7.5 5 5 5-5 5"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
           </div>
 
           <div className="post-stats">
-            <span>좋아요 {post.likeCount ?? 0}</span>
-            <span>댓글 {post.commentCount ?? 0}</span>
-            <span>조회수 {post.viewNum ?? post.viewCount ?? 0}</span>
+            <span><b>{post.likeCount ?? 0}</b> 좋아요</span>
+            <span><b>{post.commentCount ?? 0}</b> 댓글</span>
+            <span><b>{post.viewNum ?? post.viewCount ?? 0}</b> 조회</span>
           </div>
         </div>
 
-        <div className="post-author">
-          <img src={profileImage} alt="" className="author-image" />
-          <span>{nickname}</span>
+        <div className="post-author-row">
+          <div className="post-author">
+            <img src={profileImage} alt="" className="author-image" />
+            <span>{nickname}</span>
+          </div>
+          <span className="post-date">{formatDate(post.date ?? post.createdAt)}</span>
         </div>
       </Link>
     </article>

@@ -151,25 +151,27 @@ function PostDetailPage() {
 
   return (
     <main className="detail-page">
-      <article className="detail-container">
+      <section className="detail-container">
         {error && <p className="detail-error" role="alert">{error}</p>}
 
-        <PostHeader
-          post={post}
-          isOwner={isOwner}
-          onDelete={() => setIsDeleteModalOpen(true)}
-        />
+        <article className="detail-post-card">
+          <PostHeader
+            post={post}
+            isOwner={isOwner}
+            onDelete={() => setIsDeleteModalOpen(true)}
+          />
 
-        <PostBody text={post.text} image={post.image} />
+          <PostBody text={post.text} image={post.image} />
 
-        <PostStats
-          likeCount={post.likeCount ?? 0}
-          viewCount={post.viewNum ?? 0}
-          commentCount={comments.length}
-          isLiked={isLiked}
-          isLikeProcessing={isLikeProcessing}
-          onToggleLike={handleToggleLike}
-        />
+          <PostStats
+            likeCount={post.likeCount ?? 0}
+            viewCount={post.viewNum ?? 0}
+            commentCount={comments.length}
+            isLiked={isLiked}
+            isLikeProcessing={isLikeProcessing}
+            onToggleLike={handleToggleLike}
+          />
+        </article>
 
         <CommentSection
           postId={postId}
@@ -177,7 +179,7 @@ function PostDetailPage() {
           currentUser={currentUser}
           onCommentsChange={loadComments}
         />
-      </article>
+      </section>
 
       {isDeleteModalOpen && (
         <ConfirmModal

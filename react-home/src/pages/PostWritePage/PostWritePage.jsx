@@ -41,7 +41,11 @@ function PostWritePage() {
   return (
     <main className="write-page">
       <section className="write-container">
-        <h2>게시글 작성</h2>
+        <div className="write-heading">
+          <p className="eyebrow">WRITE YOUR STORY</p>
+          <h2>게시글 작성</h2>
+          <p>구장 주변의 맛집과 핫플 이야기를 남겨보세요.</p>
+        </div>
         <PostWriteForm
           isSubmitting={isSubmitting}
           serverError={error}
