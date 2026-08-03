@@ -14,7 +14,7 @@ function StadiumRanking({ rankings, isLoading, error }) {
           <p className="eyebrow">BALLPARK TOP 3</p>
           <h3>구장 랭킹 TOP 3</h3>
         </div>
-        <span className="period">7월 투표 기준</span>
+        <span className="period">8월 투표 기준</span>
       </div>
 
       {isLoading ? (
