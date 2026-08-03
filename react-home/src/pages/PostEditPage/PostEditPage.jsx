@@ -65,9 +65,8 @@ function PostEditPage() {
       await updatePost(postId, {
         patchSubject: subject,
         patchText: text,
-        // TODO: 업로드 API 구현 후 새 이미지 URL을 전송한다. null이면 기존 이미지가 유지된다.
-        patchImage: null,
         patchStadiumId: getStadiumCode(selectedStadiumId),
+        image: selectedFile,
       });
 
       navigate(`/posts/${postId}`);

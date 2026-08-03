@@ -21,11 +21,10 @@ function PostWritePage() {
       setIsSubmitting(true);
       setError("");
 
-      // TODO: 업로드 API가 추가 예정
       await createPost({
         subject,
         text,
-        image: null,
+        image: selectedFile,
         stadiumId: getStadiumCode(selectedStadiumId),
       });
 

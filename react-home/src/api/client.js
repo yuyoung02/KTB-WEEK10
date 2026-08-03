@@ -22,11 +22,12 @@ export async function apiClient(path, options = {}) {
     requestHeaders.set("Authorization", `Bearer ${accessToken}`);
   }
 
-  const requestBody = body && typeof body !== "string"
+  const isFormData = body instanceof FormData;
+  const requestBody = body && typeof body !== "string" && !isFormData
     ? JSON.stringify(body)
     : body;
 
-  if (requestBody) {
+  if (requestBody && !isFormData) {
     requestHeaders.set("Content-Type", "application/json");
   }
 

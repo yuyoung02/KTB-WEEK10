@@ -97,8 +97,8 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
             accept="image/*"
             hidden
             onChange={(event) => {
-              // TODO: 이미지 업로드 API가 정해지면 새 파일을 업로드해 patchImage URL을 만든다.
               setSelectedFile(event.target.files?.[0] ?? null);
+              setValidationError("");
             }}
           />
         </div>
@@ -106,7 +106,7 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
 
       {(selectedFile || validationError || serverError) && (
         <p className="edit-helper-text" role="alert">
-          * {validationError || serverError || "이미지 업로드 기능은 준비 중이며 기존 이미지는 유지됩니다."}
+          * {validationError || serverError || "새 이미지를 선택했습니다. 수정 시 기존 이미지를 교체합니다."}
         </p>
       )}
 

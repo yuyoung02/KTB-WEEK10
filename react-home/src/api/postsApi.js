@@ -11,16 +11,23 @@ export function getPosts({ page = 0, size = 10, stadiumId = "" } = {}) {
   return apiClient(`/posts?${params.toString()}`);
 }
 
-export function createPost({ subject, text, image = null, stadiumId }) {
+export function createPost({ subject, text, image, stadiumId }) {
+  const formData = new FormData();
+  formData.append(
+    "post",
+    new Blob([
+      JSON.stringify({ subject, text, stadiumId }),
+    ], { type: "application/json" }),
+  );
+
+  if (image) {
+    formData.append("image", image);
+  }
+
   return apiClient("/posts", {
     method: "POST",
     auth: true,
-    body: {
-      subject,
-      text,
-      image,
-      stadiumId,
-    },
+    body: formData,
   });
 }
 

@@ -92,8 +92,8 @@ function PostWriteForm({ isSubmitting, serverError, onSubmit }) {
             accept="image/*"
             hidden
             onChange={(event) => {
-              // TODO: 이미지 업로드
               setSelectedFile(event.target.files?.[0] ?? null);
+              setValidationError("");
             }}
           />
         </div>

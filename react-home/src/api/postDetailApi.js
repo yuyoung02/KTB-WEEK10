@@ -7,19 +7,27 @@ export const getPostDetail = (postId) =>
 export const updatePost = (postId, {
   patchSubject,
   patchText,
-  patchImage,
   patchStadiumId,
-}) =>
-  apiClient(`/posts/${postId}`, {
+  image,
+}) => {
+  const formData = new FormData();
+  formData.append(
+    "post",
+    new Blob([
+      JSON.stringify({ patchSubject, patchText, patchStadiumId }),
+    ], { type: "application/json" }),
+  );
+
+  if (image) {
+    formData.append("image", image);
+  }
+
+  return apiClient(`/posts/${postId}`, {
     method: "PATCH",
     auth: true,
-    body: {
-      patchSubject,
-      patchText,
-      patchImage,
-      patchStadiumId,
-    },
+    body: formData,
   });
+};
 
 export const deletePost = (postId) =>
   apiClient(`/posts/${postId}`, {
