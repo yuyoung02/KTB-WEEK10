@@ -1,6 +1,7 @@
 // 기존 투표 조회, 9개 구장 선택과 투표 요청 상태 관리
 import { useEffect, useRef, useState } from "react";
 import { getMyStadiumVote } from "../../api/voteApi";
+import { getApiErrorMessage } from "../../api/client";
 import { getAccessToken } from "../../auth/tokenStorage";
 import {
   findStadiumByCode,
@@ -30,6 +31,13 @@ function StadiumVoteModal({
         const vote = await getMyStadiumVote();
         if (isCancelled) return;
 
+        if (!vote?.stadiumId) {
+          setSelectedId("");
+          setHasExistingVote(false);
+          setMessage("");
+          return;
+        }
+
         setSelectedId(
           findStadiumByCode(vote.stadiumId)?.id ?? "",
         );
@@ -40,9 +48,14 @@ function StadiumVoteModal({
         if (error.status === 404) {
           setSelectedId("");
           setHasExistingVote(false);
+          setMessage("");
         } else {
           console.error(error);
-          setMessage("기존 투표를 불러오지 못했습니다.");
+          setMessage(getApiErrorMessage(error, {
+            401: "투표하려면 로그인이 필요합니다.",
+            403: "투표 조회 권한이 없습니다.",
+            default: "기존 투표를 불러오지 못했습니다.",
+          }));
         }
       } finally {
         if (!isCancelled) setIsVoteLoading(false);
@@ -83,7 +96,13 @@ function StadiumVoteModal({
       setMessage(`✓ ${selectedStadium?.name}에 투표했습니다.`);
     } catch (error) {
       console.error(error);
-      setMessage("투표 처리에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      setMessage(getApiErrorMessage(error, {
+        400: "투표할 구장을 다시 선택해주세요.",
+        401: "투표하려면 로그인이 필요합니다.",
+        403: "투표 권한이 없습니다.",
+        404: "사용자 또는 구장 정보를 찾을 수 없습니다.",
+        default: "투표 요청을 처리하지 못했습니다.",
+      }));
     } finally {
       setIsSubmitting(false);
     }

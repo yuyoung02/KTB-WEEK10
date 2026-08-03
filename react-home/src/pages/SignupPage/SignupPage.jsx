@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../../api/authApi";
+import { getApiErrorMessage } from "../../api/client";
 import SignupForm from "../../components/auth/SignupForm";
 import SignupSuccessModal from "../../components/auth/SignupSuccessModal";
 import "./SignupPage.css";
@@ -27,13 +28,12 @@ function SignupPage() {
     } catch (requestError) {
       console.error(requestError);
 
-      if (requestError.status === 409) {
-        setError("이미 사용 중인 이메일 또는 닉네임입니다.");
-      } else if (requestError.status === 400) {
-        setError("입력값을 다시 확인해주세요.");
-      } else {
-        setError("회원가입에 실패했거나 서버와 연결할 수 없습니다.");
-      }
+      setError(getApiErrorMessage(requestError, {
+        400: "입력값을 다시 확인해주세요.",
+        409: "이미 사용 중인 이메일 또는 닉네임입니다.",
+        413: "프로필 이미지 용량이 너무 큽니다.",
+        default: "회원가입 요청을 처리하지 못했습니다.",
+      }));
     } finally {
       setIsSubmitting(false);
     }

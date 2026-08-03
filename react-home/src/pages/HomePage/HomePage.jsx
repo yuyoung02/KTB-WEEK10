@@ -1,6 +1,7 @@
 // 홈의 소개·월간 투표·실시간 랭킹 구성
 import { useCallback, useEffect, useState } from "react";
 import { getStadiumVoteRankings } from "../../api/voteApi";
+import { getApiErrorMessage } from "../../api/client";
 import HeroSection from "../../components/home/HeroSection";
 import StadiumRanking from "../../components/ranking/StadiumRanking";
 import MonthlyStadiumVote from "../../components/vote/MonthlyStadiumVote";
@@ -34,7 +35,9 @@ function HomePage() {
     } catch (error) {
       console.error(error);
       setRankings([]);
-      setRankingError("구장 랭킹을 불러오지 못했습니다.");
+      setRankingError(getApiErrorMessage(error, {
+        default: "구장 랭킹을 불러오지 못했습니다.",
+      }));
     } finally {
       setIsRankingLoading(false);
     }

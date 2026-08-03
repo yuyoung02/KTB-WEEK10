@@ -5,6 +5,7 @@ import {
   deleteComment,
   updateComment,
 } from "../../api/postDetailApi";
+import { getApiErrorMessage } from "../../api/client";
 import CommentForm from "./CommentForm";
 import CommentItem from "./CommentItem";
 import ConfirmModal from "./ConfirmModal";
@@ -47,7 +48,13 @@ function CommentSection({ postId, comments, currentUser, onCommentsChange }) {
       await onCommentsChange();
     } catch (requestError) {
       console.error(requestError);
-      setError("댓글 처리에 실패했습니다.");
+      setError(getApiErrorMessage(requestError, {
+        400: "댓글 내용을 다시 확인해주세요.",
+        401: "댓글을 작성하려면 로그인이 필요합니다.",
+        403: "댓글 작성자만 수정할 수 있습니다.",
+        404: "게시글 또는 댓글을 찾을 수 없습니다.",
+        default: "댓글 저장 요청을 처리하지 못했습니다.",
+      }));
     } finally {
       setIsProcessing(false);
     }
@@ -64,7 +71,12 @@ function CommentSection({ postId, comments, currentUser, onCommentsChange }) {
       await onCommentsChange();
     } catch (requestError) {
       console.error(requestError);
-      setError("댓글 삭제에 실패했습니다.");
+      setError(getApiErrorMessage(requestError, {
+        401: "로그인이 만료되었습니다. 다시 로그인해주세요.",
+        403: "댓글 작성자만 삭제할 수 있습니다.",
+        404: "이미 삭제되었거나 존재하지 않는 댓글입니다.",
+        default: "댓글 삭제 요청을 처리하지 못했습니다.",
+      }));
     } finally {
       setIsProcessing(false);
     }

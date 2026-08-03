@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { clearAccessToken } from "../../auth/tokenStorage";
+import { getApiErrorMessage } from "../../api/client";
 import {
   deleteCurrentUser,
   getCurrentUser,
@@ -35,7 +36,9 @@ function MyPage() {
           clearAccessToken();
           navigate("/login", { replace: true });
         } else {
-          setFormError("회원정보를 불러오지 못했습니다.");
+          setFormError(getApiErrorMessage(error, {
+            default: "회원정보를 불러오지 못했습니다.",
+          }));
         }
       } finally {
         setIsLoading(false);
@@ -68,13 +71,14 @@ function MyPage() {
       showToast();
     } catch (error) {
       console.error(error);
-      if (error.status === 409) {
-        setFormError("이미 사용중인 닉네임입니다.");
-      } else if (error.status === 403) {
-        setFormError("수정 권한이 없습니다.");
-      } else {
-        setFormError("회원정보 수정에 실패했습니다.");
-      }
+      setFormError(getApiErrorMessage(error, {
+        400: "변경할 회원정보를 확인해주세요.",
+        401: "로그인이 만료되었습니다. 다시 로그인해주세요.",
+        403: "회원정보 수정 권한이 없습니다.",
+        409: "이미 사용 중인 닉네임입니다.",
+        413: "프로필 이미지 용량이 너무 큽니다.",
+        default: "회원정보 수정 요청을 처리하지 못했습니다.",
+      }));
     } finally {
       setIsSubmitting(false);
     }
@@ -89,13 +93,12 @@ function MyPage() {
       navigate("/", { replace: true });
     } catch (error) {
       console.error(error);
-      if (error.status === 401) {
-        setWithdrawError("비밀번호가 일치하지 않습니다.");
-      } else if (error.status === 403) {
-        setWithdrawError("삭제 권한이 없습니다.");
-      } else {
-        setWithdrawError("회원탈퇴에 실패했거나 서버와 연결할 수 없습니다.");
-      }
+      setWithdrawError(getApiErrorMessage(error, {
+        400: "비밀번호를 입력해주세요.",
+        401: "비밀번호가 일치하지 않습니다.",
+        403: "회원 탈퇴 권한이 없습니다.",
+        default: "회원 탈퇴 요청을 처리하지 못했습니다.",
+      }));
     } finally {
       setIsWithdrawing(false);
     }

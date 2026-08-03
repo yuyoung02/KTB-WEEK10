@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getPostDetail, updatePost } from "../../api/postDetailApi";
+import { getApiErrorMessage } from "../../api/client";
 import { getCurrentUser } from "../../api/userApi";
 import PostEditForm from "../../components/postEdit/PostEditForm";
 import { getStadiumCode } from "../../data/stadiums";
@@ -40,7 +41,10 @@ function PostEditPage() {
       } catch (requestError) {
         if (isCancelled) return;
         console.error(requestError);
-        setError("게시글을 불러오지 못했습니다.");
+        setError(getApiErrorMessage(requestError, {
+          404: "게시글을 찾을 수 없습니다.",
+          default: "게시글을 불러오지 못했습니다.",
+        }));
       } finally {
         if (!isCancelled) setIsLoading(false);
       }
@@ -74,11 +78,14 @@ function PostEditPage() {
       navigate(`/posts/${postId}`);
     } catch (requestError) {
       console.error({ requestError, selectedFile });
-      setError(
-        requestError.status === 403
-          ? "게시글 작성자만 수정할 수 있습니다."
-          : "게시글 수정에 실패했습니다.",
-      );
+      setError(getApiErrorMessage(requestError, {
+        400: "수정할 게시글 내용을 다시 확인해주세요.",
+        401: "로그인이 만료되었습니다. 다시 로그인해주세요.",
+        403: "게시글 작성자만 수정할 수 있습니다.",
+        404: "게시글을 찾을 수 없습니다.",
+        413: "첨부 이미지 용량이 너무 큽니다.",
+        default: "게시글 수정 요청을 처리하지 못했습니다.",
+      }));
     } finally {
       setIsSubmitting(false);
     }

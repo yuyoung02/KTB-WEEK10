@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../../api/authApi";
+import { getApiErrorMessage } from "../../api/client";
 import { setAccessToken } from "../../auth/tokenStorage";
 import LoginForm from "../../components/auth/LoginForm";
 import "./LoginPage.css";
@@ -27,13 +28,12 @@ function LoginPage() {
     } catch (requestError) {
       console.error(requestError);
 
-      if (requestError.status === 401) {
-        setError("이메일 또는 비밀번호가 올바르지 않습니다.");
-      } else if (requestError.status === 400) {
-        setError("입력값을 다시 확인해주세요.");
-      } else {
-        setError("로그인에 실패했거나 서버와 연결할 수 없습니다.");
-      }
+      setError(getApiErrorMessage(requestError, {
+        400: "이메일과 비밀번호를 모두 입력해주세요.",
+        401: "이메일 또는 비밀번호가 틀립니다.",
+        403: "이메일 또는 비밀번호가 틀립니다.",
+        default: "로그인 요청을 처리하지 못했습니다.",
+      }));
     } finally {
       setIsSubmitting(false);
     }

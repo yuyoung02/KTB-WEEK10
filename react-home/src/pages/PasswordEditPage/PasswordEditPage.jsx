@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { clearAccessToken } from "../../auth/tokenStorage";
+import { getApiErrorMessage } from "../../api/client";
 import { updatePassword } from "../../api/userApi";
 import PasswordEditForm from "../../components/passwordEdit/PasswordEditForm";
 import "./PasswordEditPage.css";
@@ -57,7 +58,9 @@ function PasswordEditPage() {
       } else {
         setServerErrors({
           ...EMPTY_SERVER_ERRORS,
-          currentPassword: "비밀번호 수정에 실패했거나 서버와 연결할 수 없습니다.",
+          currentPassword: getApiErrorMessage(error, {
+            default: "비밀번호 수정 요청을 처리하지 못했습니다.",
+          }),
         });
       }
     } finally {

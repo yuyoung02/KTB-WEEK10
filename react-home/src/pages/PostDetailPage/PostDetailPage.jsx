@@ -9,6 +9,7 @@ import {
   getPostDetail,
   removeLike,
 } from "../../api/postDetailApi";
+import { getApiErrorMessage } from "../../api/client";
 import { getCurrentUser } from "../../api/userApi";
 import CommentSection from "../../components/postDetail/CommentSection";
 import ConfirmModal from "../../components/postDetail/ConfirmModal";
@@ -76,11 +77,12 @@ function PostDetailPage() {
       } catch (requestError) {
         if (isCancelled) return;
         console.error(requestError);
-        setError(
-          requestError.status === 404
-            ? "게시글을 찾을 수 없습니다."
-            : "게시글을 불러오지 못했습니다.",
-        );
+        setError(getApiErrorMessage(requestError, {
+          401: "게시글을 보려면 로그인이 필요합니다.",
+          403: "게시글 조회 권한이 없습니다.",
+          404: "게시글을 찾을 수 없습니다.",
+          default: "게시글을 불러오지 못했습니다.",
+        }));
       } finally {
         if (!isCancelled) setIsLoading(false);
       }
@@ -117,7 +119,13 @@ function PostDetailPage() {
       }));
     } catch (requestError) {
       console.error(requestError);
-      setError("좋아요 처리에 실패했습니다.");
+      setError(getApiErrorMessage(requestError, {
+        401: "좋아요를 누르려면 로그인이 필요합니다.",
+        403: "좋아요 처리 권한이 없습니다.",
+        404: "게시글을 찾을 수 없습니다.",
+        409: "이미 반영된 좋아요 요청입니다.",
+        default: "좋아요 요청을 처리하지 못했습니다.",
+      }));
     } finally {
       setIsLikeProcessing(false);
     }
@@ -132,7 +140,12 @@ function PostDetailPage() {
       navigate("/posts", { replace: true });
     } catch (requestError) {
       console.error(requestError);
-      setError("게시글 삭제에 실패했습니다.");
+      setError(getApiErrorMessage(requestError, {
+        401: "로그인이 만료되었습니다. 다시 로그인해주세요.",
+        403: "게시글 작성자만 삭제할 수 있습니다.",
+        404: "이미 삭제되었거나 존재하지 않는 게시글입니다.",
+        default: "게시글 삭제 요청을 처리하지 못했습니다.",
+      }));
       setIsDeleteModalOpen(false);
     } finally {
       setIsDeleteProcessing(false);

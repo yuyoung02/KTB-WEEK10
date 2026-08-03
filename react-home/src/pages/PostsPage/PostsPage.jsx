@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPosts } from "../../api/postsApi";
+import { getApiErrorMessage } from "../../api/client";
 import PostList from "../../components/posts/PostList";
 import PostSearch from "../../components/posts/PostSearch";
 import StadiumDropdown from "../../components/posts/StadiumDropdown";
@@ -34,7 +35,9 @@ function PostsPage() {
         if (isCancelled) return;
         console.error(requestError);
         setPosts([]);
-        setError("게시글을 불러오지 못했습니다.");
+        setError(getApiErrorMessage(requestError, {
+          default: "게시글을 불러오지 못했습니다.",
+        }));
       } finally {
         if (!isCancelled) setIsLoading(false);
       }
