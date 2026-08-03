@@ -7,12 +7,14 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
   const [nickname, setNickname] = useState(user.nickname ?? "");
   const [profileFile, setProfileFile] = useState(null);
   const [profilePreviewUrl, setProfilePreviewUrl] = useState("");
+  const [isExistingImageRemoved, setIsExistingImageRemoved] = useState(false);
   const [validationError, setValidationError] = useState("");
   const profileInputRef = useRef(null);
 
   useEffect(() => {
     setNickname(user.nickname ?? "");
     setProfileFile(null);
+    setIsExistingImageRemoved(false);
   }, [user.image, user.nickname]);
 
   useEffect(() => {
@@ -44,6 +46,7 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
     onSubmit({
       nickname: trimmedNickname,
       profileFile,
+      removeImage: isExistingImageRemoved,
     });
   };
 
@@ -62,22 +65,34 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
           type="file"
           accept="image/*"
           hidden
-          onChange={(event) => setProfileFile(event.target.files?.[0] ?? null)}
+          onChange={(event) => {
+            setProfileFile(event.target.files?.[0] ?? null);
+            setIsExistingImageRemoved(false);
+            setValidationError("");
+          }}
         />
         <div className="mypage-profile-control">
           <label className="mypage-profile-image-box" htmlFor="mypage-profile-image">
             <img
-              src={profilePreviewUrl || user.image || DEFAULT_PROFILE_IMAGE}
+              src={profilePreviewUrl
+                || (!isExistingImageRemoved && user.image)
+                || DEFAULT_PROFILE_IMAGE}
               alt="프로필 사진"
             />
             <span>변경</span>
           </label>
-          {profilePreviewUrl && (
+          {(profilePreviewUrl || (user.image && !isExistingImageRemoved)) && (
             <button
               type="button"
               className="profile-remove-button"
-              aria-label="새로 선택한 프로필 이미지 삭제"
-              onClick={clearProfileFile}
+              aria-label={profilePreviewUrl ? "새로 선택한 프로필 이미지 삭제" : "기존 프로필 이미지 삭제"}
+              onClick={() => {
+                if (profilePreviewUrl) {
+                  clearProfileFile();
+                } else {
+                  setIsExistingImageRemoved(true);
+                }
+              }}
             >
               ×
             </button>
@@ -101,12 +116,14 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
           }}
         />
 
-        {(profileFile || validationError || serverError) && (
+        {(profileFile || isExistingImageRemoved || validationError || serverError) && (
           <p
-            className={`mypage-helper-text ${profileFile && !validationError && !serverError ? "notice" : ""}`}
+            className={`mypage-helper-text ${(profileFile || isExistingImageRemoved) && !validationError && !serverError ? "notice" : ""}`}
             role={validationError || serverError ? "alert" : undefined}
           >
-            * {validationError || serverError || "새 이미지를 선택했습니다. 수정 시 기존 이미지를 교체합니다."}
+            * {validationError || serverError || (isExistingImageRemoved
+              ? "수정하면 기존 프로필 이미지가 삭제됩니다."
+              : "새 이미지를 선택했습니다. 수정 시 기존 이미지를 교체합니다.")}
           </p>
         )}
 

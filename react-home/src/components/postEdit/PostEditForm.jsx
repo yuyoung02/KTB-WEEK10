@@ -16,6 +16,7 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
   const [text, setText] = useState(post.text ?? "");
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedPreviewUrl, setSelectedPreviewUrl] = useState("");
+  const [isExistingImageRemoved, setIsExistingImageRemoved] = useState(false);
   const [validationError, setValidationError] = useState("");
   const fileInputRef = useRef(null);
 
@@ -60,6 +61,7 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
       text: text.trim(),
       selectedStadiumId,
       selectedFile,
+      removeImage: isExistingImageRemoved,
     });
   };
 
@@ -108,7 +110,8 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
         <div className="file-row">
           <label htmlFor="edit-image" className="file-button">파일 선택</label>
           <span className="file-name">
-            {selectedFile?.name ?? (post.image ? "기존 이미지 있음" : "파일을 선택해주세요.")}
+            {selectedFile?.name
+              ?? (post.image && !isExistingImageRemoved ? "기존 이미지 있음" : "이미지 없음")}
           </span>
           <input
             ref={fileInputRef}
@@ -118,34 +121,41 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
             hidden
             onChange={(event) => {
               setSelectedFile(event.target.files?.[0] ?? null);
+              setIsExistingImageRemoved(false);
               setValidationError("");
             }}
           />
         </div>
 
-        {(selectedPreviewUrl || post.image) && (
+        {(selectedPreviewUrl || (post.image && !isExistingImageRemoved)) && (
           <div className="post-image-preview">
             <img
               src={selectedPreviewUrl || post.image}
               alt={selectedPreviewUrl ? "새 첨부 이미지 미리보기" : "기존 첨부 이미지"}
             />
-            {selectedPreviewUrl && (
-              <button
-                type="button"
-                className="preview-remove-button"
-                aria-label="새로 선택한 이미지 삭제"
-                onClick={clearSelectedFile}
-              >
-                ×
-              </button>
-            )}
+            <button
+              type="button"
+              className="preview-remove-button"
+              aria-label={selectedPreviewUrl ? "새로 선택한 이미지 삭제" : "기존 이미지 삭제"}
+              onClick={() => {
+                if (selectedPreviewUrl) {
+                  clearSelectedFile();
+                } else {
+                  setIsExistingImageRemoved(true);
+                }
+              }}
+            >
+              ×
+            </button>
           </div>
         )}
       </div>
 
-      {(selectedFile || validationError || serverError) && (
+      {(selectedFile || isExistingImageRemoved || validationError || serverError) && (
         <p className="edit-helper-text" role="alert">
-          * {validationError || serverError || "새 이미지를 선택했습니다. 수정 시 기존 이미지를 교체합니다."}
+          * {validationError || serverError || (isExistingImageRemoved
+            ? "수정하면 기존 이미지가 삭제됩니다."
+            : "새 이미지를 선택했습니다. 수정 시 기존 이미지를 교체합니다.")}
         </p>
       )}
 

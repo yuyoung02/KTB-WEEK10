@@ -9,12 +9,13 @@ export const updatePost = (postId, {
   patchText,
   patchStadiumId,
   image,
+  removeImage = false,
 }) => {
   const formData = new FormData();
   formData.append(
     "post",
     new Blob([
-      JSON.stringify({ patchSubject, patchText, patchStadiumId }),
+      JSON.stringify({ patchSubject, patchText, patchStadiumId, removeImage }),
     ], { type: "application/json" }),
   );
 

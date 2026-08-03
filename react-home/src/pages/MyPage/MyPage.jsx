@@ -52,13 +52,14 @@ function MyPage() {
     toastTimerRef.current = setTimeout(() => setIsToastOpen(false), 1500);
   };
 
-  const handleUpdate = async ({ nickname, profileFile }) => {
+  const handleUpdate = async ({ nickname, profileFile, removeImage }) => {
     try {
       setIsSubmitting(true);
       setFormError("");
       const updatedUser = await updateCurrentUser({
         nickname,
         image: profileFile,
+        removeImage,
       });
       setUser(updatedUser);
       window.dispatchEvent(new CustomEvent("user-profile-updated", {

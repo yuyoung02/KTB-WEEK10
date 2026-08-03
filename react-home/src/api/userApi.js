@@ -8,12 +8,12 @@ export function getCurrentUser() {
   });
 }
 
-export function updateCurrentUser({ nickname, image }) {
+export function updateCurrentUser({ nickname, image, removeImage = false }) {
   const formData = new FormData();
   formData.append(
     "user",
     new Blob([
-      JSON.stringify({ nickname }),
+      JSON.stringify({ nickname, removeImage }),
     ], { type: "application/json" }),
   );
 

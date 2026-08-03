@@ -57,6 +57,7 @@ function PostEditPage() {
     text,
     selectedStadiumId,
     selectedFile,
+    removeImage,
   }) => {
     try {
       setIsSubmitting(true);
@@ -67,6 +68,7 @@ function PostEditPage() {
         patchText: text,
         patchStadiumId: getStadiumCode(selectedStadiumId),
         image: selectedFile,
+        removeImage,
       });
 
       navigate(`/posts/${postId}`);
