@@ -1,5 +1,5 @@
 // 회원가입 입력값, 프로필 미리보기와 helper text 관리
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,20}$/;
@@ -19,6 +19,7 @@ function SignupForm({ isSubmitting, serverError, onSubmit }) {
   const [profileFile, setProfileFile] = useState(null);
   const [profilePreviewUrl, setProfilePreviewUrl] = useState("");
   const [errors, setErrors] = useState(EMPTY_ERRORS);
+  const profileInputRef = useRef(null);
 
   useEffect(() => {
     if (!profileFile) {
@@ -81,24 +82,42 @@ function SignupForm({ isSubmitting, serverError, onSubmit }) {
     setErrors((current) => ({ ...current, [field]: "" }));
   };
 
+  const clearProfileFile = () => {
+    setProfileFile(null);
+    if (profileInputRef.current) profileInputRef.current.value = "";
+  };
+
   return (
     <form className="signup-form" noValidate onSubmit={handleSubmit}>
       <div className="signup-profile-area">
         <label htmlFor="signup-profile">프로필 사진</label>
         <input
+          ref={profileInputRef}
           id="signup-profile"
           type="file"
           accept="image/*"
           hidden
           onChange={(event) => setProfileFile(event.target.files?.[0] ?? null)}
         />
-        <label className="signup-profile-upload" htmlFor="signup-profile">
-          {profilePreviewUrl ? (
-            <img src={profilePreviewUrl} alt="프로필 미리보기" />
-          ) : (
-            <span>+</span>
+        <div className="signup-profile-control">
+          <label className="signup-profile-upload" htmlFor="signup-profile">
+            {profilePreviewUrl ? (
+              <img src={profilePreviewUrl} alt="프로필 미리보기" />
+            ) : (
+              <span>+</span>
+            )}
+          </label>
+          {profilePreviewUrl && (
+            <button
+              type="button"
+              className="profile-remove-button"
+              aria-label="선택한 프로필 이미지 삭제"
+              onClick={clearProfileFile}
+            >
+              ×
+            </button>
           )}
-        </label>
+        </div>
       </div>
 
       <div className="signup-input-box">

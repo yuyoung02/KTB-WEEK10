@@ -132,6 +132,46 @@
   text-overflow: ellipsis;
 }
 
+.edit-page .post-image-preview {
+  position: relative;
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px;
+  border: 1px solid #e0e5e9;
+  border-radius: 12px;
+  background: #f8fafb;
+}
+
+.edit-page .post-image-preview img {
+  width: 100%;
+  max-height: 280px;
+  border-radius: 8px;
+  object-fit: contain;
+  display: block;
+}
+
+.edit-page .preview-remove-button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(13, 35, 56, 0.82);
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(13, 35, 56, 0.2);
+}
+
+.edit-page .preview-remove-button:hover {
+  background: #0d2338;
+}
+
 .edit-page .edit-helper-text {
   margin: -12px 0 16px;
   color: #f00;

@@ -1,5 +1,5 @@
 // 회원 프로필 미리보기와 닉네임 수정 폼
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const DEFAULT_PROFILE_IMAGE = "/assets/images/defaultProfileImage.png";
 
@@ -8,6 +8,7 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
   const [profileFile, setProfileFile] = useState(null);
   const [profilePreviewUrl, setProfilePreviewUrl] = useState("");
   const [validationError, setValidationError] = useState("");
+  const profileInputRef = useRef(null);
 
   useEffect(() => {
     setNickname(user.nickname ?? "");
@@ -46,24 +47,42 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
     });
   };
 
+  const clearProfileFile = () => {
+    setProfileFile(null);
+    if (profileInputRef.current) profileInputRef.current.value = "";
+  };
+
   return (
     <form className="mypage-form" noValidate onSubmit={handleSubmit}>
       <div className="mypage-profile-area">
         <label htmlFor="mypage-profile-image">프로필 사진*</label>
         <input
+          ref={profileInputRef}
           id="mypage-profile-image"
           type="file"
           accept="image/*"
           hidden
           onChange={(event) => setProfileFile(event.target.files?.[0] ?? null)}
         />
-        <label className="mypage-profile-image-box" htmlFor="mypage-profile-image">
-          <img
-            src={profilePreviewUrl || user.image || DEFAULT_PROFILE_IMAGE}
-            alt="프로필 사진"
-          />
-          <span>변경</span>
-        </label>
+        <div className="mypage-profile-control">
+          <label className="mypage-profile-image-box" htmlFor="mypage-profile-image">
+            <img
+              src={profilePreviewUrl || user.image || DEFAULT_PROFILE_IMAGE}
+              alt="프로필 사진"
+            />
+            <span>변경</span>
+          </label>
+          {profilePreviewUrl && (
+            <button
+              type="button"
+              className="profile-remove-button"
+              aria-label="새로 선택한 프로필 이미지 삭제"
+              onClick={clearProfileFile}
+            >
+              ×
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="mypage-form-box">

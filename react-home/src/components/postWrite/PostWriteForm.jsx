@@ -1,5 +1,5 @@
 // 구장, 제목, 본문, 첨부파일을 입력하는 작성 폼
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { stadiums } from "../../data/stadiums";
 import StadiumSelect from "./StadiumSelect";
 
@@ -8,7 +8,26 @@ function PostWriteForm({ isSubmitting, serverError, onSubmit }) {
   const [subject, setSubject] = useState("");
   const [text, setText] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
   const [validationError, setValidationError] = useState("");
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreviewUrl("");
+      return undefined;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreviewUrl(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
+
+  const clearSelectedFile = () => {
+    setSelectedFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -87,6 +106,7 @@ function PostWriteForm({ isSubmitting, serverError, onSubmit }) {
             {selectedFile?.name ?? "파일을 선택해주세요."}
           </span>
           <input
+            ref={fileInputRef}
             id="post-image"
             type="file"
             accept="image/*"
@@ -97,6 +117,20 @@ function PostWriteForm({ isSubmitting, serverError, onSubmit }) {
             }}
           />
         </div>
+
+        {previewUrl && (
+          <div className="post-image-preview">
+            <img src={previewUrl} alt="첨부 이미지 미리보기" />
+            <button
+              type="button"
+              className="preview-remove-button"
+              aria-label="선택한 이미지 삭제"
+              onClick={clearSelectedFile}
+            >
+              ×
+            </button>
+          </div>
+        )}
       </div>
 
       {(validationError || serverError) && (

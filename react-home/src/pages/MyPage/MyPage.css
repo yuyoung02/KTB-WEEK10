@@ -51,6 +51,35 @@
   cursor: pointer;
 }
 
+.mypage-profile-control {
+  position: relative;
+  width: 149px;
+  margin: 0 auto;
+}
+
+.mypage-profile-control .mypage-profile-image-box {
+  margin: 0;
+}
+
+.mypage-profile-area .profile-remove-button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 3;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #163452;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(13, 35, 56, 0.22);
+}
+
 .mypage-profile-image-box img {
   width: 100%;
   height: 100%;

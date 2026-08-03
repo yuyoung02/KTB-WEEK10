@@ -1,5 +1,5 @@
 // 기존 게시글 값과 구장 선택을 관리하는 수정 폼
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { findStadiumByCode, stadiums } from "../../data/stadiums";
 import StadiumSelect from "../postWrite/StadiumSelect";
 
@@ -15,7 +15,26 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
   const [subject, setSubject] = useState(post.subject ?? "");
   const [text, setText] = useState(post.text ?? "");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedPreviewUrl, setSelectedPreviewUrl] = useState("");
   const [validationError, setValidationError] = useState("");
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setSelectedPreviewUrl("");
+      return undefined;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setSelectedPreviewUrl(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
+
+  const clearSelectedFile = () => {
+    setSelectedFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -92,6 +111,7 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
             {selectedFile?.name ?? (post.image ? "기존 이미지 있음" : "파일을 선택해주세요.")}
           </span>
           <input
+            ref={fileInputRef}
             id="edit-image"
             type="file"
             accept="image/*"
@@ -102,6 +122,25 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
             }}
           />
         </div>
+
+        {(selectedPreviewUrl || post.image) && (
+          <div className="post-image-preview">
+            <img
+              src={selectedPreviewUrl || post.image}
+              alt={selectedPreviewUrl ? "새 첨부 이미지 미리보기" : "기존 첨부 이미지"}
+            />
+            {selectedPreviewUrl && (
+              <button
+                type="button"
+                className="preview-remove-button"
+                aria-label="새로 선택한 이미지 삭제"
+                onClick={clearSelectedFile}
+              >
+                ×
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {(selectedFile || validationError || serverError) && (
