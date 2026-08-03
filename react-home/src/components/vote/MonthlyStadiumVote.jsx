@@ -33,7 +33,7 @@ function MonthlyStadiumVote({ onVoteSuccess }) {
       <div className="section-heading">
         <div>
           <p className="eyebrow">AUGUST VOTE</p>
-          <h3>7월의 구장 투표</h3>
+          <h3>8월의 구장 투표</h3>
         </div>
         <span className="period">8.1 — 8.31</span>
       </div>
