@@ -122,8 +122,8 @@ function StadiumVoteModal({
         <div className="modal-heading">
           <div>
             {/* 투표 달, 투표 주제 */}
-            <p className="eyebrow">JULY VOTE</p>
-            <h3 id="vote-modal-title">응원 분위기가 가장 좋은 야구장은?</h3>
+            <p className="eyebrow">AUGUST VOTE</p>
+            <h3 id="vote-modal-title">맛집이 가장 많은 야구장은?</h3>
           </div>
           <button
             ref={closeButtonRef}
