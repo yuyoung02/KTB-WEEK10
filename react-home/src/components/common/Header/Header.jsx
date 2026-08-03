@@ -9,6 +9,7 @@ const DEFAULT_PROFILE_IMAGE = "/assets/images/defaultProfileImage.png";
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(Boolean(getAccessToken()));
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileImage, setProfileImage] = useState(DEFAULT_PROFILE_IMAGE);
   const profileMenuRef = useRef(null);
@@ -18,6 +19,7 @@ function Header() {
 
     const loadProfile = async () => {
       if (!getAccessToken()) {
+        setIsAuthenticated(false);
         setProfileImage(DEFAULT_PROFILE_IMAGE);
         return;
       }
@@ -25,11 +27,18 @@ function Header() {
       try {
         const user = await getCurrentUser();
         if (!isCancelled) {
+          setIsAuthenticated(true);
           setProfileImage(user.image || DEFAULT_PROFILE_IMAGE);
         }
       } catch (error) {
         console.error(error);
-        if (!isCancelled) setProfileImage(DEFAULT_PROFILE_IMAGE);
+        if (!isCancelled) {
+          if (error.status === 401 || error.status === 403) {
+            clearAccessToken();
+            setIsAuthenticated(false);
+          }
+          setProfileImage(DEFAULT_PROFILE_IMAGE);
+        }
       }
     };
 
@@ -75,41 +84,49 @@ function Header() {
           <h1>구장 이야기 ⚾️</h1>
         </Link>
 
-        <div className="profile-menu" ref={profileMenuRef}>
-          <button
-            type="button"
-            className="profile-button"
-            aria-label="프로필 메뉴"
-            aria-expanded={isProfileOpen}
-            onClick={() => setIsProfileOpen((isOpen) => !isOpen)}
-          >
-            <img
-              src={profileImage}
-              className="header-profile-image"
-              alt="프로필"
-            />
-          </button>
+        {isAuthenticated ? (
+          <div className="profile-menu" ref={profileMenuRef}>
+            <button
+              type="button"
+              className="profile-button"
+              aria-label="프로필 메뉴"
+              aria-expanded={isProfileOpen}
+              onClick={() => setIsProfileOpen((isOpen) => !isOpen)}
+            >
+              <img
+                src={profileImage}
+                className="header-profile-image"
+                alt="프로필"
+              />
+            </button>
 
-          {isProfileOpen && (
-            <ul className="dropdown">
-              <li><Link to="/mypage">마이페이지</Link></li>
-              <li><Link to="/mypage/password">비밀번호수정</Link></li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => {
-                    clearAccessToken();
-                    setProfileImage(DEFAULT_PROFILE_IMAGE);
-                    setIsProfileOpen(false);
-                    navigate("/login");
-                  }}
-                >
-                  로그아웃
-                </button>
-              </li>
-            </ul>
-          )}
-        </div>
+            {isProfileOpen && (
+              <ul className="dropdown">
+                <li><Link to="/mypage">마이페이지</Link></li>
+                <li><Link to="/mypage/password">비밀번호수정</Link></li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      clearAccessToken();
+                      setIsAuthenticated(false);
+                      setProfileImage(DEFAULT_PROFILE_IMAGE);
+                      setIsProfileOpen(false);
+                      navigate("/login");
+                    }}
+                  >
+                    로그아웃
+                  </button>
+                </li>
+              </ul>
+            )}
+          </div>
+        ) : (
+          <div className="header-auth-actions" aria-label="회원 메뉴">
+            <Link to="/login">로그인</Link>
+            <Link to="/signup">회원가입</Link>
+          </div>
+        )}
       </div>
 
       <nav className="header-nav" aria-label="주요 메뉴">
