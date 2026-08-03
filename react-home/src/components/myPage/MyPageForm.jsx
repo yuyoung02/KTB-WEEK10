@@ -11,7 +11,8 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
 
   useEffect(() => {
     setNickname(user.nickname ?? "");
-  }, [user.nickname]);
+    setProfileFile(null);
+  }, [user.image, user.nickname]);
 
   useEffect(() => {
     if (!profileFile) {
@@ -41,7 +42,6 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
     setValidationError("");
     onSubmit({
       nickname: trimmedNickname,
-      image: user.image ?? null,
       profileFile,
     });
   };
@@ -87,7 +87,7 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
             className={`mypage-helper-text ${profileFile && !validationError && !serverError ? "notice" : ""}`}
             role={validationError || serverError ? "alert" : undefined}
           >
-            * {validationError || serverError || "이미지 업로드 기능은 준비 중이며 기존 이미지는 유지됩니다."}
+            * {validationError || serverError || "새 이미지를 선택했습니다. 수정 시 기존 이미지를 교체합니다."}
           </p>
         )}
 

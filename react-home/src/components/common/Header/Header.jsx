@@ -1,13 +1,50 @@
 // 공통 로고, 네비게이션과 프로필 메뉴
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { clearAccessToken } from "../../../auth/tokenStorage";
+import { getCurrentUser } from "../../../api/userApi";
+import { clearAccessToken, getAccessToken } from "../../../auth/tokenStorage";
+
+const DEFAULT_PROFILE_IMAGE = "/assets/images/defaultProfileImage.png";
 
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState(DEFAULT_PROFILE_IMAGE);
   const profileMenuRef = useRef(null);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const loadProfile = async () => {
+      if (!getAccessToken()) {
+        setProfileImage(DEFAULT_PROFILE_IMAGE);
+        return;
+      }
+
+      try {
+        const user = await getCurrentUser();
+        if (!isCancelled) {
+          setProfileImage(user.image || DEFAULT_PROFILE_IMAGE);
+        }
+      } catch (error) {
+        console.error(error);
+        if (!isCancelled) setProfileImage(DEFAULT_PROFILE_IMAGE);
+      }
+    };
+
+    const handleProfileUpdated = (event) => {
+      setProfileImage(event.detail?.image || DEFAULT_PROFILE_IMAGE);
+    };
+
+    loadProfile();
+    window.addEventListener("user-profile-updated", handleProfileUpdated);
+
+    return () => {
+      isCancelled = true;
+      window.removeEventListener("user-profile-updated", handleProfileUpdated);
+    };
+  }, []);
 
   useEffect(() => {
     const closeProfileMenu = (event) => {
@@ -47,7 +84,7 @@ function Header() {
             onClick={() => setIsProfileOpen((isOpen) => !isOpen)}
           >
             <img
-              src="/assets/images/defaultProfileImage.png"
+              src={profileImage}
               className="header-profile-image"
               alt="프로필"
             />
@@ -62,6 +99,7 @@ function Header() {
                   type="button"
                   onClick={() => {
                     clearAccessToken();
+                    setProfileImage(DEFAULT_PROFILE_IMAGE);
                     setIsProfileOpen(false);
                     navigate("/login");
                   }}

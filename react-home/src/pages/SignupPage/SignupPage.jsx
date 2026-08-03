@@ -12,7 +12,7 @@ function SignupPage() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSignup = async ({ email, password, nickname }) => {
+  const handleSignup = async ({ email, password, nickname, profileFile }) => {
     try {
       setIsSubmitting(true);
       setError("");
@@ -21,7 +21,7 @@ function SignupPage() {
         email,
         password,
         nickname,
-        image: null,
+        image: profileFile,
       });
       setIsSuccessModalOpen(true);
     } catch (requestError) {

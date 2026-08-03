@@ -9,13 +9,22 @@ export function getCurrentUser() {
 }
 
 export function updateCurrentUser({ nickname, image }) {
+  const formData = new FormData();
+  formData.append(
+    "user",
+    new Blob([
+      JSON.stringify({ nickname }),
+    ], { type: "application/json" }),
+  );
+
+  if (image) {
+    formData.append("image", image);
+  }
+
   return apiClient("/users/me", {
     method: "PATCH",
     auth: true,
-    body: {
-      nickname,
-      image,
-    },
+    body: formData,
   });
 }
 

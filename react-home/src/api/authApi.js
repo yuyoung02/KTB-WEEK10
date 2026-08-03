@@ -11,14 +11,21 @@ export function login({ email, password }) {
   });
 }
 
-export function signup({ email, password, nickname, image = null }) {
+export function signup({ email, password, nickname, image }) {
+  const formData = new FormData();
+  formData.append(
+    "user",
+    new Blob([
+      JSON.stringify({ email, password, nickname }),
+    ], { type: "application/json" }),
+  );
+
+  if (image) {
+    formData.append("image", image);
+  }
+
   return apiClient("/users/signup", {
     method: "POST",
-    body: {
-      email,
-      password,
-      nickname,
-      image,
-    },
+    body: formData,
   });
 }
