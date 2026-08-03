@@ -163,22 +163,21 @@
 
 .detail-page .post-image {
   width: 100%;
-  max-height: 480px;
-  margin-bottom: 24px;
-  border-radius: 14px;
-  background-color: #f2f4f6;
-  overflow: hidden;
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
 }
 
 .detail-page .post-image img {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   max-height: 480px;
-  object-fit: contain;
+  border-radius: 14px;
+  object-fit: scale-down;
   display: block;
 }
 
 .detail-page .post-text {
-  min-height: 120px;
   margin: 0;
   color: #303942;
   font-size: 14px;

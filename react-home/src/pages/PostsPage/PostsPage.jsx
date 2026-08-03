@@ -61,7 +61,7 @@ function PostsPage() {
             <p className="eyebrow">BALLPARK STORY</p>
             <h2>구장 이야기</h2>
             <p className="page-description">
-              직관 전후에 들르기 좋은 맛집과 핫플을 공유해보세요.
+              직관 전후에 들르기 좋은 핫플과 구장 정보를 공유해보세요.
             </p>
           </div>
         </div>

@@ -10,7 +10,7 @@ function PostSearch({ keyword, onKeywordChange }) {
       <input
         type="search"
         value={keyword}
-        placeholder="맛집, 카페, 술집 등 검색"
+        placeholder="구장 정보 검색"
         aria-label="게시글 검색어"
         onChange={(event) => onKeywordChange(event.target.value)}
       />
