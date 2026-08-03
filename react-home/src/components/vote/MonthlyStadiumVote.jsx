@@ -32,17 +32,17 @@ function MonthlyStadiumVote({ onVoteSuccess }) {
     <section className="section-block" id="monthly-vote">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">JULY VOTE</p>
+          <p className="eyebrow">AUGUST VOTE</p>
           <h3>7월의 구장 투표</h3>
         </div>
-        <span className="period">7.1 — 7.31</span>
+        <span className="period">8.1 — 8.31</span>
       </div>
 
       <article className="vote-card">
         <div className="vote-intro">
           <div className="vote-copy">
             <span className="vote-chip">이번 달 질문</span>
-            <h4>응원 분위기가 가장 좋은 야구장은?</h4>
+            <h4>맛집이 가장 많은 야구장은?</h4>
             <p>직접 경험한 구장 중 한 곳을 골라주세요.</p>
             <button
               type="button"
