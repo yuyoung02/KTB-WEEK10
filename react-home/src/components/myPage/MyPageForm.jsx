@@ -1,5 +1,6 @@
 // 회원 프로필 미리보기와 닉네임 수정 폼
 import { useEffect, useRef, useState } from "react";
+import { prepareImageUpload } from "../../utils/imageUpload";
 
 const DEFAULT_PROFILE_IMAGE = "/assets/images/defaultProfileImage.png";
 
@@ -9,6 +10,7 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
   const [profilePreviewUrl, setProfilePreviewUrl] = useState("");
   const [isExistingImageRemoved, setIsExistingImageRemoved] = useState(false);
   const [validationError, setValidationError] = useState("");
+  const [isConvertingImage, setIsConvertingImage] = useState(false);
   const profileInputRef = useRef(null);
 
   useEffect(() => {
@@ -55,6 +57,25 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
     if (profileInputRef.current) profileInputRef.current.value = "";
   };
 
+  const handleProfileChange = async (event) => {
+    const file = event.target.files?.[0] ?? null;
+    if (!file) return;
+
+    try {
+      setIsConvertingImage(true);
+      setValidationError("");
+      setProfileFile(await prepareImageUpload(file));
+      setIsExistingImageRemoved(false);
+    } catch (error) {
+      clearProfileFile();
+      setValidationError(
+        error.message || "프로필 이미지를 처리하지 못했습니다.",
+      );
+    } finally {
+      setIsConvertingImage(false);
+    }
+  };
+
   return (
     <form className="mypage-form" noValidate onSubmit={handleSubmit}>
       <div className="mypage-profile-area">
@@ -63,13 +84,9 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
           ref={profileInputRef}
           id="mypage-profile-image"
           type="file"
-          accept="image/*"
+          accept="image/*,.heic,.heif"
           hidden
-          onChange={(event) => {
-            setProfileFile(event.target.files?.[0] ?? null);
-            setIsExistingImageRemoved(false);
-            setValidationError("");
-          }}
+          onChange={handleProfileChange}
         />
         <div className="mypage-profile-control">
           <label className="mypage-profile-image-box" htmlFor="mypage-profile-image">
@@ -79,7 +96,7 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
                 || DEFAULT_PROFILE_IMAGE}
               alt="프로필 사진"
             />
-            <span>변경</span>
+            <span>{isConvertingImage ? "변환 중" : "변경"}</span>
           </label>
           {(profilePreviewUrl || (user.image && !isExistingImageRemoved)) && (
             <button
@@ -127,7 +144,7 @@ function MyPageForm({ user, isSubmitting, serverError, onSubmit }) {
           </p>
         )}
 
-        <button className="mypage-submit-button" type="submit" disabled={isSubmitting}>
+        <button className="mypage-submit-button" type="submit" disabled={isSubmitting || isConvertingImage}>
           {isSubmitting ? "수정 중" : "수정하기"}
         </button>
       </div>

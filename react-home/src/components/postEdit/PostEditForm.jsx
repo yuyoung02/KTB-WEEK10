@@ -1,6 +1,7 @@
 // 기존 게시글 값과 구장 선택을 관리하는 수정 폼
 import { useEffect, useRef, useState } from "react";
 import { findStadiumByCode, stadiums } from "../../data/stadiums";
+import { prepareImageUpload } from "../../utils/imageUpload";
 import StadiumSelect from "../postWrite/StadiumSelect";
 
 function getInitialStadiumId(post) {
@@ -18,6 +19,7 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
   const [selectedPreviewUrl, setSelectedPreviewUrl] = useState("");
   const [isExistingImageRemoved, setIsExistingImageRemoved] = useState(false);
   const [validationError, setValidationError] = useState("");
+  const [isConvertingImage, setIsConvertingImage] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -35,6 +37,25 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
   const clearSelectedFile = () => {
     setSelectedFile(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleImageChange = async (event) => {
+    const file = event.target.files?.[0] ?? null;
+    if (!file) return;
+
+    try {
+      setIsConvertingImage(true);
+      setValidationError("");
+      setSelectedFile(await prepareImageUpload(file));
+      setIsExistingImageRemoved(false);
+    } catch (error) {
+      clearSelectedFile();
+      setValidationError(
+        error.message || "이미지를 처리하지 못했습니다. JPG 또는 PNG 파일을 선택해주세요.",
+      );
+    } finally {
+      setIsConvertingImage(false);
+    }
   };
 
   const handleSubmit = (event) => {
@@ -108,7 +129,9 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
       <div className="file-box">
         <label>이미지</label>
         <div className="file-row">
-          <label htmlFor="edit-image" className="file-button">파일 선택</label>
+          <label htmlFor="edit-image" className="file-button">
+            {isConvertingImage ? "변환 중" : "파일 선택"}
+          </label>
           <span className="file-name">
             {selectedFile?.name
               ?? (post.image && !isExistingImageRemoved ? "기존 이미지 있음" : "이미지 없음")}
@@ -117,13 +140,9 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
             ref={fileInputRef}
             id="edit-image"
             type="file"
-            accept="image/*"
+            accept="image/*,.heic,.heif"
             hidden
-            onChange={(event) => {
-              setSelectedFile(event.target.files?.[0] ?? null);
-              setIsExistingImageRemoved(false);
-              setValidationError("");
-            }}
+            onChange={handleImageChange}
           />
         </div>
 
@@ -159,7 +178,7 @@ function PostEditForm({ post, isSubmitting, serverError, onSubmit }) {
         </p>
       )}
 
-      <button type="submit" className="edit-button" disabled={isSubmitting}>
+      <button type="submit" className="edit-button" disabled={isSubmitting || isConvertingImage}>
         {isSubmitting ? "수정 중" : "수정하기"}
       </button>
     </form>

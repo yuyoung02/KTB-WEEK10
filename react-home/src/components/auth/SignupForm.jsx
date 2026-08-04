@@ -1,5 +1,6 @@
 // 회원가입 입력값, 프로필 미리보기와 helper text 관리
 import { useEffect, useRef, useState } from "react";
+import { prepareImageUpload } from "../../utils/imageUpload";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,20}$/;
@@ -18,6 +19,8 @@ function SignupForm({ isSubmitting, serverError, onSubmit }) {
   const [nickname, setNickname] = useState("");
   const [profileFile, setProfileFile] = useState(null);
   const [profilePreviewUrl, setProfilePreviewUrl] = useState("");
+  const [profileError, setProfileError] = useState("");
+  const [isConvertingImage, setIsConvertingImage] = useState(false);
   const [errors, setErrors] = useState(EMPTY_ERRORS);
   const profileInputRef = useRef(null);
 
@@ -87,6 +90,24 @@ function SignupForm({ isSubmitting, serverError, onSubmit }) {
     if (profileInputRef.current) profileInputRef.current.value = "";
   };
 
+  const handleProfileChange = async (event) => {
+    const file = event.target.files?.[0] ?? null;
+    if (!file) return;
+
+    try {
+      setIsConvertingImage(true);
+      setProfileError("");
+      setProfileFile(await prepareImageUpload(file));
+    } catch (error) {
+      clearProfileFile();
+      setProfileError(
+        error.message || "프로필 이미지를 처리하지 못했습니다.",
+      );
+    } finally {
+      setIsConvertingImage(false);
+    }
+  };
+
   return (
     <form className="signup-form" noValidate onSubmit={handleSubmit}>
       <div className="signup-profile-area">
@@ -95,16 +116,16 @@ function SignupForm({ isSubmitting, serverError, onSubmit }) {
           ref={profileInputRef}
           id="signup-profile"
           type="file"
-          accept="image/*"
+          accept="image/*,.heic,.heif"
           hidden
-          onChange={(event) => setProfileFile(event.target.files?.[0] ?? null)}
+          onChange={handleProfileChange}
         />
         <div className="signup-profile-control">
           <label className="signup-profile-upload" htmlFor="signup-profile">
             {profilePreviewUrl ? (
               <img src={profilePreviewUrl} alt="프로필 미리보기" />
             ) : (
-              <span>+</span>
+              <span>{isConvertingImage ? "…" : "+"}</span>
             )}
           </label>
           {profilePreviewUrl && (
@@ -118,6 +139,9 @@ function SignupForm({ isSubmitting, serverError, onSubmit }) {
             </button>
           )}
         </div>
+        {profileError && (
+          <p className="signup-helper-text" role="alert">* {profileError}</p>
+        )}
       </div>
 
       <div className="signup-input-box">
@@ -192,7 +216,7 @@ function SignupForm({ isSubmitting, serverError, onSubmit }) {
         {errors.nickname && <p className="signup-helper-text">* {errors.nickname}</p>}
       </div>
 
-      <button className="signup-button" type="submit" disabled={isSubmitting}>
+      <button className="signup-button" type="submit" disabled={isSubmitting || isConvertingImage}>
         {isSubmitting ? "가입 중" : "회원가입"}
       </button>
     </form>

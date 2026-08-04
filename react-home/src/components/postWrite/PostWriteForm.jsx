@@ -1,6 +1,7 @@
 // 구장, 제목, 본문, 첨부파일을 입력하는 작성 폼
 import { useEffect, useRef, useState } from "react";
 import { stadiums } from "../../data/stadiums";
+import { prepareImageUpload } from "../../utils/imageUpload";
 import StadiumSelect from "./StadiumSelect";
 
 function PostWriteForm({ isSubmitting, serverError, onSubmit }) {
@@ -10,6 +11,7 @@ function PostWriteForm({ isSubmitting, serverError, onSubmit }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [validationError, setValidationError] = useState("");
+  const [isConvertingImage, setIsConvertingImage] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -27,6 +29,24 @@ function PostWriteForm({ isSubmitting, serverError, onSubmit }) {
   const clearSelectedFile = () => {
     setSelectedFile(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleImageChange = async (event) => {
+    const file = event.target.files?.[0] ?? null;
+    if (!file) return;
+
+    try {
+      setIsConvertingImage(true);
+      setValidationError("");
+      setSelectedFile(await prepareImageUpload(file));
+    } catch (error) {
+      clearSelectedFile();
+      setValidationError(
+        error.message || "이미지를 처리하지 못했습니다. JPG 또는 PNG 파일을 선택해주세요.",
+      );
+    } finally {
+      setIsConvertingImage(false);
+    }
   };
 
   const handleSubmit = (event) => {
@@ -101,7 +121,9 @@ function PostWriteForm({ isSubmitting, serverError, onSubmit }) {
       <div className="file-box">
         <label>이미지</label>
         <div className="file-row">
-          <label htmlFor="post-image" className="file-button">파일 선택</label>
+          <label htmlFor="post-image" className="file-button">
+            {isConvertingImage ? "변환 중" : "파일 선택"}
+          </label>
           <span className="file-name">
             {selectedFile?.name ?? "파일을 선택해주세요."}
           </span>
@@ -109,12 +131,9 @@ function PostWriteForm({ isSubmitting, serverError, onSubmit }) {
             ref={fileInputRef}
             id="post-image"
             type="file"
-            accept="image/*"
+            accept="image/*,.heic,.heif"
             hidden
-            onChange={(event) => {
-              setSelectedFile(event.target.files?.[0] ?? null);
-              setValidationError("");
-            }}
+            onChange={handleImageChange}
           />
         </div>
 
@@ -139,7 +158,7 @@ function PostWriteForm({ isSubmitting, serverError, onSubmit }) {
         </p>
       )}
 
-      <button type="submit" className="submit-button" disabled={isSubmitting}>
+      <button type="submit" className="submit-button" disabled={isSubmitting || isConvertingImage}>
         {isSubmitting ? "등록 중" : "완료"}
       </button>
     </form>
