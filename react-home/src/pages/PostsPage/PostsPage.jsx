@@ -1,6 +1,6 @@
 // 게시글 목록 조회와 구장 필터·페이지 상태 관리
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { getPosts } from "../../api/postsApi";
 import { getApiErrorMessage } from "../../api/client";
 import PostList from "../../components/posts/PostList";
@@ -10,11 +10,20 @@ import { getStadiumCode, stadiums } from "../../data/stadiums";
 import "./PostsPage.css";
 
 function PostsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const stadiumParam = searchParams.get("stadium") ?? "";
+  const stadiumIdFromUrl = stadiums.some((stadium) => stadium.id === stadiumParam)
+    ? stadiumParam
+    : "";
   const [posts, setPosts] = useState([]);
-  const [selectedStadiumId, setSelectedStadiumId] = useState("");
+  const [selectedStadiumId, setSelectedStadiumId] = useState(stadiumIdFromUrl);
   const [keyword, setKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setSelectedStadiumId(stadiumIdFromUrl);
+  }, [stadiumIdFromUrl]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -51,6 +60,7 @@ function PostsPage() {
 
   const handleStadiumChange = (stadiumId) => {
     setSelectedStadiumId(stadiumId);
+    setSearchParams(stadiumId ? { stadium: stadiumId } : {});
   };
 
   return (
