@@ -1,0 +1,16 @@
+name: Self-hosted Runner Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-runner:
+    runs-on: [self-hosted, Linux, ARM64]
+
+    steps:
+      - name: Check runner
+        run: |
+          echo "Runner connected successfully"
+          hostname
+          uname -m
+          pwd
