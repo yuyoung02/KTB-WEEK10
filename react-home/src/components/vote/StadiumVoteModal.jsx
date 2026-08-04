@@ -12,6 +12,7 @@ import StadiumOption from "./StadiumOption";
 function StadiumVoteModal({
   onClose,
   onSubmit,
+  onCancelVote,
 }) {
   const [selectedId, setSelectedId] = useState("");
   const [hasExistingVote, setHasExistingVote] = useState(false);
@@ -81,11 +82,19 @@ function StadiumVoteModal({
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!selectedId || isSubmitting) return;
+    if ((!selectedId && !hasExistingVote) || isSubmitting) return;
 
     try {
       setIsSubmitting(true);
       setMessage("");
+
+      if (!selectedId && hasExistingVote) {
+        await onCancelVote();
+        setHasExistingVote(false);
+        setMessage("투표를 취소했습니다.");
+        return;
+      }
+
       const didVote = await onSubmit(selectedId);
       if (didVote === false) return;
 
@@ -155,11 +164,13 @@ function StadiumVoteModal({
             <button
               type="submit"
               className="vote-submit"
-              disabled={!selectedId || isSubmitting}
+              disabled={(!selectedId && !hasExistingVote) || isSubmitting}
             >
               {isSubmitting
                 ? "투표 처리 중"
-                : hasExistingVote
+                : hasExistingVote && !selectedId
+                  ? "투표 취소하기"
+                  : hasExistingVote
                   ? "선택한 구장 변경하기"
                   : "이 구장에 투표하기"}
             </button>

@@ -1,11 +1,7 @@
 // 게시글 구장, 제목, 작성자와 작성자용 버튼 표시
 import { Link } from "react-router-dom";
+import { formatSeoulDate } from "../../utils/date";
 import StadiumBadge from "../common/StadiumBadge";
-
-function formatDate(date) {
-  if (!date) return "";
-  return date.replace("T", " ").slice(0, 19);
-}
 
 function PostHeader({ post, isOwner, onDelete }) {
   return (
@@ -37,7 +33,7 @@ function PostHeader({ post, isOwner, onDelete }) {
           alt=""
         />
         <strong>{post.nickname || `작성자 ${post.userId}`}</strong>
-        <span>{formatDate(post.date)}</span>
+        <span>{formatSeoulDate(post.date, { withSeconds: true })}</span>
       </div>
     </section>
   );

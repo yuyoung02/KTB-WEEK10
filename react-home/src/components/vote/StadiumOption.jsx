@@ -7,7 +7,8 @@ function StadiumOption({ stadium, isSelected, onSelect }) {
         name="stadium"
         value={stadium.id}
         checked={isSelected}
-        onChange={() => onSelect(stadium.id)}
+        onChange={() => {}}
+        onClick={() => onSelect(isSelected ? "" : stadium.id)}
       />
 
       <span className={`option-logos ${stadium.teams.length > 1 ? "dual-logo" : ""}`}>

@@ -16,6 +16,13 @@ export function submitStadiumVote(stadiumId) {
   });
 }
 
+export function cancelStadiumVote() {
+  return apiClient("/stadiumVotes/me", {
+    method: "DELETE",
+    auth: true,
+  });
+}
+
 export function getStadiumVoteRankings() {
   return apiClient("/stadiumVotes/rankings");
 }

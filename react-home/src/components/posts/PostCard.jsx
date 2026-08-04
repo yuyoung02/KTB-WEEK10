@@ -1,11 +1,7 @@
 // 게시글 목록의 게시글 한 개 표시
 import { Link } from "react-router-dom";
+import { formatSeoulDate } from "../../utils/date";
 import StadiumBadge from "../common/StadiumBadge";
-
-function formatDate(date) {
-  if (!date) return "";
-  return date.replace("T", " ").slice(0, 16);
-}
 
 function PostCard({ post }) {
   const postId = post.postId ?? post.id;
@@ -47,7 +43,7 @@ function PostCard({ post }) {
             <img src={profileImage} alt="" className="author-image" />
             <span>{nickname}</span>
           </div>
-          <span className="post-date">{formatDate(post.date ?? post.createdAt)}</span>
+          <span className="post-date">{formatSeoulDate(post.date ?? post.createdAt)}</span>
         </div>
       </Link>
     </article>

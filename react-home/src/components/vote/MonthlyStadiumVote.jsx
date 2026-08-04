@@ -1,7 +1,7 @@
 // 투표 모달 열기, 투표 저장과 로그인 이동 처리
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { submitStadiumVote } from "../../api/voteApi";
+import { cancelStadiumVote, submitStadiumVote } from "../../api/voteApi";
 import { getAccessToken } from "../../auth/tokenStorage";
 import { getStadiumCode } from "../../data/stadiums";
 import StadiumVoteModal from "./StadiumVoteModal";
@@ -26,6 +26,11 @@ function MonthlyStadiumVote({ onVoteSuccess }) {
     );
     await onVoteSuccess?.();
     return true;
+  };
+
+  const cancelVote = async () => {
+    await cancelStadiumVote();
+    await onVoteSuccess?.();
   };
 
   return (
@@ -67,6 +72,7 @@ function MonthlyStadiumVote({ onVoteSuccess }) {
         <StadiumVoteModal
           onClose={closeModal}
           onSubmit={submitVote}
+          onCancelVote={cancelVote}
         />
       )}
     </section>
