@@ -234,13 +234,13 @@
 .posts-page .post-list {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 18px;
+  gap: 12px;
 }
 
 .posts-page .post-card {
   width: 100%;
   min-width: 0;
-  height: 242px;
+  height: 174px;
   border: 1px solid #e1e6eb;
   border-radius: 18px;
   background-color: #fff;
@@ -264,8 +264,8 @@
 }
 
 .posts-page .post-author-row {
-  min-height: 56px;
-  padding: 12px 18px;
+  min-height: 48px;
+  padding: 9px 24px;
   border-top: 1px solid #edf0f2;
   background: #fafbfc;
   display: flex;
@@ -274,8 +274,9 @@
 }
 
 .posts-page .post-content {
+  position: relative;
   min-height: 0;
-  padding: 18px 18px 16px;
+  padding: 13px 24px 10px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -283,6 +284,8 @@
 
 .posts-page .post-title-row {
   min-height: 0;
+  padding-right: 42px;
+  flex: 1;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -291,10 +294,12 @@
 
 .posts-page .post-card-heading {
   min-width: 0;
+  height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 0;
 }
 
 .posts-page .post-card-heading .api-stadium-badge {
@@ -302,7 +307,7 @@
 }
 
 .posts-page .post-title-row h2 {
-  margin: 0;
+  margin: auto 0;
   overflow: hidden;
   font-size: 18px;
   font-weight: 700;
@@ -321,6 +326,9 @@
 }
 
 .posts-page .post-arrow {
+  position: absolute;
+  top: 50%;
+  right: 24px;
   width: 28px;
   height: 28px;
   flex: 0 0 28px;
@@ -330,6 +338,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  transform: translateY(-50%);
   transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
 
@@ -342,12 +351,12 @@
 .posts-page .post-card:hover .post-arrow {
   background: #1e3a5f;
   color: #fff;
-  transform: translateX(2px);
+  transform: translate(2px, -50%);
 }
 
 .posts-page .post-stats {
-  margin-top: auto;
-  padding-top: 16px;
+  margin-top: 0;
+  padding-top: 6px;
   display: flex;
   gap: 7px;
   color: #6b7280;
@@ -433,7 +442,7 @@
   }
 
   .posts-page .post-card {
-    height: 224px;
+    height: 168px;
   }
 
   .posts-page .post-title-row h2 {
@@ -447,7 +456,11 @@
 
   .posts-page .post-author-row,
   .posts-page .post-content {
-    padding-right: 17px;
-    padding-left: 17px;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .posts-page .post-arrow {
+    right: 20px;
   }
 }
