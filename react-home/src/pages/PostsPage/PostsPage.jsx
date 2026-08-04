@@ -7,7 +7,6 @@ import PostList from "../../components/posts/PostList";
 import PostSearch from "../../components/posts/PostSearch";
 import StadiumDropdown from "../../components/posts/StadiumDropdown";
 import { getStadiumCode, stadiums } from "../../data/stadiums";
-import { mockPosts } from "../../data/mockPosts";
 import "./PostsPage.css";
 
 function PostsPage() {
@@ -44,16 +43,6 @@ function PostsPage() {
       } catch (requestError) {
         if (isCancelled) return;
         console.error(requestError);
-
-        if (import.meta.env.DEV && requestError.isNetworkError) {
-          const selectedStadiumCode = getStadiumCode(selectedStadiumId);
-          setPosts(selectedStadiumCode
-            ? mockPosts.filter((post) => post.stadiumId === selectedStadiumCode)
-            : mockPosts);
-          setError("");
-          return;
-        }
-
         setPosts([]);
         setError(getApiErrorMessage(requestError, {
           default: "게시글을 불러오지 못했습니다.",
