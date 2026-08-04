@@ -27,3 +27,23 @@ jobs:
         env:
           VITE_API_BASE_URL: /api
         run: npm run build
+
+  deploy-check:
+    needs: build
+    runs-on: [self-hosted, Linux, ARM64]
+
+    steps:
+      - name: Check deployment environment
+        run: |
+          echo "실행 사용자: $(whoami)"
+          echo "현재 위치: $(pwd)"
+
+          test -d /home/ubuntu/ballpark
+          test -f /home/ubuntu/ballpark/docker-compose.yml
+
+          docker --version
+          docker compose version
+
+          cd /home/ubuntu/ballpark
+          docker compose config --services
+          docker compose ps
