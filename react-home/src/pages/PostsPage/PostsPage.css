@@ -304,6 +304,7 @@
 
 .posts-page .post-card-heading .api-stadium-badge {
   flex: 0 0 auto;
+  margin-left: -4px;
 }
 
 .posts-page .post-title-row h2 {
