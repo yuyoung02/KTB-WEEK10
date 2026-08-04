@@ -1,4 +1,4 @@
-name: Frontend CI
+name: Frontend CI/CD
 
 on:
   workflow_dispatch:
@@ -28,22 +28,25 @@ jobs:
           VITE_API_BASE_URL: /api
         run: npm run build
 
-  deploy-check:
+  deploy:
     needs: build
     runs-on: [self-hosted, Linux, ARM64]
 
     steps:
-      - name: Check deployment environment
+      - name: Update frontend source
         run: |
-          echo "실행 사용자: $(whoami)"
-          echo "현재 위치: $(pwd)"
+          cd /home/ubuntu/ballpark/KTB-WEEK10
+          git pull origin main
 
-          test -d /home/ubuntu/ballpark
-          test -f /home/ubuntu/ballpark/docker-compose.yml
-
-          docker --version
-          docker compose version
-
+      - name: Rebuild frontend container
+        run: |
           cd /home/ubuntu/ballpark
-          docker compose config --services
-          docker compose ps
+          docker compose build frontend
+          docker compose up -d --no-deps frontend
+
+      - name: Check frontend container
+        run: |
+          cd /home/ubuntu/ballpark
+          docker compose ps frontend
+          curl --fail --silent http://localhost/ > /dev/null
+          echo "Frontend deployment successful"
