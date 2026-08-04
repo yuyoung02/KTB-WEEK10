@@ -43,7 +43,7 @@ function HeroSection() {
 
     const timer = window.setInterval(() => {
       setActiveIndex((index) => (index + 1) % slides.length);
-    }, 2500);
+    }, 4000);
 
     return () => window.clearInterval(timer);
   }, [isPaused]);

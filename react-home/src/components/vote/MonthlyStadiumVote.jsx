@@ -54,7 +54,14 @@ function MonthlyStadiumVote({ onVoteSuccess }) {
               className="open-vote-button"
               onClick={() => setIsModalOpen(true)}
             >
-              투표하러 가기 →
+              <span>투표하러 가기</span>
+              <svg
+                className="vote-button-arrow"
+                viewBox="0 0 16 16"
+                aria-hidden="true"
+              >
+                <path d="M5.5 3.5 10 8l-4.5 4.5" />
+              </svg>
             </button>
           </div>
 
