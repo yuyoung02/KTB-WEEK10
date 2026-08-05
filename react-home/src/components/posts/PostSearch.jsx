@@ -1,5 +1,5 @@
 // 게시글 키워드 검색 입력 UI
-function PostSearch({ keyword, onKeywordChange, onSearch }) {
+function PostSearch({ keyword, onKeywordChange, onSearch, onClear }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     onSearch(keyword);
@@ -19,8 +19,18 @@ function PostSearch({ keyword, onKeywordChange, onSearch }) {
           aria-label="게시글 검색어"
           onChange={(event) => onKeywordChange(event.target.value)}
         />
+        {keyword && (
+          <button
+            type="button"
+            className="search-clear"
+            aria-label="검색어 지우기"
+            onClick={onClear}
+          >
+            ×
+          </button>
+        )}
       </div>
-      <button type="submit">검색</button>
+      <button type="submit" className="search-submit">검색</button>
     </form>
   );
 }

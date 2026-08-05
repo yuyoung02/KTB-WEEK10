@@ -65,6 +65,11 @@ function PostsPage() {
     setSearchParams(stadiumId ? { stadium: stadiumId } : {});
   };
 
+  const handleSearchClear = () => {
+    setKeyword("");
+    setSubmittedKeyword("");
+  };
+
   return (
     <main className="posts-page">
       <section className="posts-container">
@@ -88,6 +93,7 @@ function PostsPage() {
             keyword={keyword}
             onKeywordChange={setKeyword}
             onSearch={(searchKeyword) => setSubmittedKeyword(searchKeyword.trim())}
+            onClear={handleSearchClear}
           />
         </div>
 
