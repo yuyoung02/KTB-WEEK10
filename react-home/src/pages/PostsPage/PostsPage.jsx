@@ -18,6 +18,7 @@ function PostsPage() {
   const [posts, setPosts] = useState([]);
   const [selectedStadiumId, setSelectedStadiumId] = useState(stadiumIdFromUrl);
   const [keyword, setKeyword] = useState("");
+  const [submittedKeyword, setSubmittedKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -35,6 +36,7 @@ function PostsPage() {
 
         const data = await getPosts({
           stadiumId: getStadiumCode(selectedStadiumId),
+          keyword: submittedKeyword,
         });
 
         if (isCancelled) return;
@@ -56,7 +58,7 @@ function PostsPage() {
     return () => {
       isCancelled = true;
     };
-  }, [selectedStadiumId]);
+  }, [selectedStadiumId, submittedKeyword]);
 
   const handleStadiumChange = (stadiumId) => {
     setSelectedStadiumId(stadiumId);
@@ -85,6 +87,7 @@ function PostsPage() {
           <PostSearch
             keyword={keyword}
             onKeywordChange={setKeyword}
+            onSearch={(searchKeyword) => setSubmittedKeyword(searchKeyword.trim())}
           />
         </div>
 

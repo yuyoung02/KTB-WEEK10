@@ -179,11 +179,30 @@
   gap: 8px;
 }
 
-.posts-page .search-box input {
+.posts-page .search-input-wrap {
+  position: relative;
   flex: 1;
   min-width: 0;
+}
+
+.posts-page .search-icon {
+  position: absolute;
+  top: 50%;
+  left: 13px;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: #7b8996;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.posts-page .search-box input {
+  width: 100%;
   height: 42px;
-  padding: 0 14px;
+  padding: 0 14px 0 40px;
   border: 1px solid #cfd6de;
   border-radius: 8px;
   background: #fff;

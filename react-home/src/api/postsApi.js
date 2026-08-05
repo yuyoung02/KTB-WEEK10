@@ -1,12 +1,13 @@
 // 게시글 목록, 작성, 구장 필터 API
 import { apiClient } from "./client";
 
-export function getPosts({ page = 0, size = 10, stadiumId = "" } = {}) {
+export function getPosts({ page = 0, size = 10, stadiumId = "", keyword = "" } = {}) {
   const params = new URLSearchParams({
     page: String(page),
     size: String(size),
   });
   if (stadiumId) params.set("stadiumId", stadiumId);
+  if (keyword.trim()) params.set("keyword", keyword.trim());
 
   return apiClient(`/posts?${params.toString()}`);
 }
